@@ -71,7 +71,7 @@ sel2.style('color', 'cornflowerblue'); // change for all elements
 sel3.style('color', 
     function(d, i, nodes) {
         // console.log(d, i, nodes);
-        return `hsl(${Math.random() * 360}, 100%, 50%)`;
+        return `hsl(${Math.ceil(Math.random() * 360)}, 100%, 50%)`;
     }
 )
 
