@@ -1,0 +1,12 @@
+body {
+    font-family: sans-serif;
+    /*background-color: #222531;
+    color: whitesmoke;*/
+}
+
+section {
+    margin-bottom: 20px;
+    padding: 5px 20PX;
+    border-radius: 10px;
+    box-shadow: 1px 1px 8px 3px rgba(198, 198, 198, 0.75);
+}
