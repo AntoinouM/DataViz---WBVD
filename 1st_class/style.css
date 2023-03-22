@@ -10,3 +10,13 @@ section {
     border-radius: 10px;
     box-shadow: 1px 1px 8px 3px rgba(198, 198, 198, 0.75);
 }
+
+.specialText {
+    font-size: 1.2em;
+    color: darkgoldenrod;
+    text-transform: capitalize;
+}
+
+svg {
+    background-color: #222531;
+}
