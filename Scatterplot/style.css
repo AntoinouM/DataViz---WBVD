@@ -1,5 +1,5 @@
 body {
-  background-color: #222531;
+  background-color: #1a1d2b;
 }
 
 #app {
@@ -14,4 +14,14 @@ body {
 
 #app > p {
   width: 50%;
+}
+
+#viz {
+  margin-top: 5vh;
+  background-color: #222531;
+  border-radius: 10px;
+}
+
+#viz > g {
+
 }
