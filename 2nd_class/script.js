@@ -1,8 +1,6 @@
 // ================================================================  
 // ================================================================
 
-
-
 let cities = [
     { name: 'London', population: 8674000},
     { name: 'New York', population: 8406000},
@@ -22,4 +20,6 @@ const svg = d3.select('#Section1 > svg')
         return d.population * 0.000004;
     })
     .style('fill', 'crimson')
+
+
 
