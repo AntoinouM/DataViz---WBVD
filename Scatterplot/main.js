@@ -1,24 +1,16 @@
-import './style.css'
-import javascriptLogo from './javascript.svg'
-import viteLogo from '/vite.svg'
-import { setupCounter } from './counter.js'
+import './style.css';
+import * as d3 from 'd3';
 
-document.querySelector('#app').innerHTML = `
-  <div>
-    <a href="https://vitejs.dev" target="_blank">
-      <img src="${viteLogo}" class="logo" alt="Vite logo" />
-    </a>
-    <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript" target="_blank">
-      <img src="${javascriptLogo}" class="logo vanilla" alt="JavaScript logo" />
-    </a>
-    <h1>Hello Vite!</h1>
-    <div class="card">
-      <button id="counter" type="button"></button>
-    </div>
-    <p class="read-the-docs">
-      Click on the Vite logo to learn more
-    </p>
-  </div>
-`
+/* ======= CHART CHECKILIST ========
+- [ ] `Access data` -- Define how we access the values
+- [ ] `Create chart dimensions` -- Declare the physical chart parameters
+- [ ] `Draw canvas` -- Render the wrapper and bounds element
+- [ ] `Create scales` -- Create scales for every visualized attribute
+- [ ] `Draw data` -- Render the data elements
+- [ ] `Draw peripherals` -- Render the axes, labels, legends, annotations, etc
+- [ ] `Set up interactions` -- Initialize event listeners and create interaction behavior
+*/
 
-setupCounter(document.querySelector('#counter'))
+const data = d3.csv('./data/dataSet.csv');
+console.log(data);
+
