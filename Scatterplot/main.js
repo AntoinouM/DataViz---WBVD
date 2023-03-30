@@ -59,13 +59,15 @@ async function drawChart() {
     // Here we will create a linear scale
             // FROM INPUT DOMAIN TO OUTPUT RANGE
     const xScale = d3.scaleLinear()
-        .domain(d3.extent(dataSet, e => e.x)) // Requires arry of min and max as input
-        .range([0, boundedWith]); // Also requires an arry of mean and max as input
+        .domain([0, d3.max(dataSet, e => e.x)]) // Requires arry of min and max as input
+        .range([0, boundedWith]) // Also requires an arry of mean and max as input
+        .nice();
     //console.log(xScale(n)) --> used as a function, it gives the sclaed value of n
     // we can convert back scaled value to data value using xScyle.invert(value)
     const yScale = d3.scaleLinear()
         .domain([0, d3.max(dataSet, e => e.y)])
         .range([boundedHeight, 0]) // we flip it because we need the highet point to be on top
+        //.clamp(true) make all value stick to the range but can invalidate them
         .nice();
 
     /* [5] ===== DRAW DATA ===== */
@@ -90,8 +92,45 @@ async function drawChart() {
         .tickSize(5)
     // Actually create the Y axis
     viz.append('g')
-        .attr('class', 'y-axis')
+        .attr('class', `x-axis, axes`)
         .call(yAxis)
+
+    const xAxis = d3.axisBottom(xScale)
+
+    // Append the x axis
+    viz.append('g')
+        .attr('class', `x-axis, axes`)
+        //.attr('class', 'axes')
+        .attr('transform', `translate(0, ${boundedHeight})`)
+        .call(xAxis)
+
+
+    // =====================================
+    /* [7] ===== SET UP INTERACTION ===== */
+    // =====================================
+   
+    /**
+     * In d3 we can attach event listeners to a selection of one element or multiples ones
+     * by using the .on() method and providing an event we want to listen to and a function that should happen when the event is triggered
+     * The .on() method returns a selection again so you can chain it to other d3 functions
+     */
+
+    circles
+        .on('mousemove', function(event, d, i, nodes) { //arg in this order
+            // current circle change size and color
+            d3.select(this)
+                .attr('fill', 'crimson')
+                .attr('r', circleRadius * 2)
+            console.log(d)
+        })
+        .on('mouseout', function(event, d, i, nodes) {
+            d3.select(this)
+                .attr('fill', color)
+                .attr('r', circleRadius)
+            console.log('mouse out')
+        })
+
+
 
 }
 
