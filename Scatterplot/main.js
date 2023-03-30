@@ -125,8 +125,9 @@ async function drawChart() {
         .on('mousemove', function(event, d, i, nodes) { //arg in this order
             // current circle change size and color
             d3.select(this)
-                .transition().duration(500).ease(d3.easeBounce)
-                .attr('fill', 'crimson')
+                .transition().duration(500).ease(d3.easeCubic)
+                //.attr('fill', 'crimson') // only the style can be animated
+                .style('fill', 'crimson')
                 .attr('r', circleRadius + 3)
             // Move tooltip to current position
             tooltip.style('opacity', 1)
@@ -138,10 +139,12 @@ async function drawChart() {
         .on('mouseout', function(event, d, i, nodes) {
             d3.select(this)
                 .transition().duration(100) // need to add the transition for exit as well
-                .attr('fill', color)
+                .style('fill', color)
                 .attr('r', circleRadius)
             tooltip.style('opacity', 0)
         })
+
+        const enterTransition = d3.transition().duration(500).ease(d3.easeBounceIn);
 }
 
 drawChart();
