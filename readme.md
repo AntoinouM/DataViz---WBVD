@@ -34,3 +34,10 @@ Have a look at https://pudding.cool to see example of stories
 
 ### Hands on
 see code
+
+
+> npm create vite@latest
+> cd ...
+> npm install
+> -> import  * as d3 from 'd3'
+
