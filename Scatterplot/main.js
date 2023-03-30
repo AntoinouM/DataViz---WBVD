@@ -64,8 +64,9 @@ async function drawChart() {
     //console.log(xScale(n)) --> used as a function, it gives the sclaed value of n
     // we can convert back scaled value to data value using xScyle.invert(value)
     const yScale = d3.scaleLinear()
-        .domain(d3.extent(dataSet, e => e.y))
-        .range([boundedHeight, 0]); // we flip it because we need the highet point to be on top
+        .domain([0, d3.max(dataSet, e => e.y)])
+        .range([boundedHeight, 0]) // we flip it because we need the highet point to be on top
+        .nice();
 
     /* [5] ===== DRAW DATA ===== */
     /**
@@ -84,7 +85,13 @@ async function drawChart() {
             .attr('fill', color)
 
     /* [6] ===== DRAW PERIPHERALS ===== */
-    const yAxis = d3.axisLeft(yScale); // Call the axis generator
+    const yAxis = d3.axisLeft(yScale) // Call the axis generator
+        .tickValues([20, 40, 60, 80, 100])
+        .tickSize(5)
+    // Actually create the Y axis
+    viz.append('g')
+        .attr('class', 'y-axis')
+        .call(yAxis)
 
 }
 
