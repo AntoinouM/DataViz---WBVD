@@ -1,9 +1,9 @@
 body {
   background-color: #1a1d2b;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 #app {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   text-align: center;
   color: whitesmoke;
   padding: 30px 60px;
@@ -28,4 +28,16 @@ body {
 
 .axes {
   color: #93eef8;
+}
+
+.tooltip {
+  position: absolute;
+  opacity: 0;
+  
+  width: 120px;
+  border: 1px dashed #666c86;
+  font-size: 10pt;
+  border-radius: 10px;
+  padding: 4px;
+  background-color: #8d96bc;
 }

@@ -115,26 +115,34 @@ async function drawChart() {
      * The .on() method returns a selection again so you can chain it to other d3 functions
      */
 
+    /**
+     * Trnsition in d3 can be done with the .transition() function, which animate all attributes or stayle change after the  call of the function if it is a continuous value (e.g 0 - 1 opacity)
+     */
+
+    const tooltip = d3.select('.tooltip')
+
     circles
         .on('mousemove', function(event, d, i, nodes) { //arg in this order
             // current circle change size and color
             d3.select(this)
+                .transition().duration(500).ease(d3.easeBounce)
                 .attr('fill', 'crimson')
-                .attr('r', circleRadius * 2)
-            console.log(d)
+                .attr('r', circleRadius + 3)
+            // Move tooltip to current position
+            tooltip.style('opacity', 1)
+                .style('top', (event.pageY) + 'px')
+                .style('left', (event.pageX + 10) + 'px')
+                .text(d.x)
+            
         })
         .on('mouseout', function(event, d, i, nodes) {
             d3.select(this)
+                .transition().duration(100) // need to add the transition for exit as well
                 .attr('fill', color)
                 .attr('r', circleRadius)
-            console.log('mouse out')
+            tooltip.style('opacity', 0)
         })
-
-
-
 }
-
-
 
 drawChart();
 
