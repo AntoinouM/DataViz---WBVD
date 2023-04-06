@@ -9,13 +9,18 @@ async function drawChart() {
   const circleRadius = 4;
   const color = '#FFCAE9';
   /* ===== Load Data ===== */
-  const dataSet = await d3.json('./data/weather_data_2021.json')
+  let dataSet = await d3.json('./data/weather_data_2021.json')
     // add a corresponding season to all my entries
-  let dataWithSeason = dataSet.map(function(d) {
-    let month = new Date(d.date).getMonth();
-      d.season = getSeason(month);
-    return d;
-  });
+    dataSet = dataSet.map(function(d) {
+      let month = new Date(d.date).getMonth();
+        d.season = getSeason(month);
+      return d;
+    });
+    // add a temperature in celcius
+    dataSet = dataSet.map(function(d) {
+        d.temperatureMax = parseFloat(((d.temperatureMax - 32) * 5/9).toFixed(2));
+      return d;
+    });
 
   /* ===== CHART DIMENSION ===== */
   const margin = {top: 20, right: 20, bottom: 35, left: 35};
@@ -34,7 +39,7 @@ async function drawChart() {
 
 
   // Table view in console
-  console.table(dataSet[0]);
+  console.table(dataSet[243]);
 
   // define accessor functions
   const yAccessor = d => d.temperatureMax;
@@ -42,9 +47,6 @@ async function drawChart() {
 
 
     
-  console.table(dataWithSeason[0])
-  console.log()
-
   // compute statistics
   console.log('===== Stats =====')
   
