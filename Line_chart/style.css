@@ -26,10 +26,19 @@ body {
   color: #93eef8;
 }
 
+.x-axis {
+  font-size: 16px;
+}
+
 .box {
   fill: steelblue;
   stroke: pink;
   stroke-width: 1px;
+}
+
+.active {
+  fill: pink;
+  stroke: steelblue;
 }
 
 .median {
