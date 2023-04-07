@@ -27,7 +27,20 @@ body {
 }
 
 .box {
-  background-color: steelblue;
-  border: 1px solid pink;
+  fill: steelblue;
+  stroke: pink;
+  stroke-width: 1px;
+}
+
+.median {
+  stroke: pink;
+  stroke-width: 2px;
+  fill: pink;
+}
+
+.minmax {
+  stroke: pink;
+  stroke-width: 1px;
+  fill: pink;
 }
 

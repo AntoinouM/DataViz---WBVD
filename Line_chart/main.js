@@ -44,89 +44,98 @@ async function drawChart() {
 
   // define accessor functions
   const yAccessor = d => d.temperatureMax;
-  const xAccessore = d => d.date;
+  const xAccessore = d => d.season;
 
   /* ===== CREATE SCALE ===== */
   // create the vivaldi scale
   const xScale = d3.scaleBand()
     .domain(['winter', 'spring', 'summer', 'fall'])
     .range([0, boundedWith])
-    .padding(0.2)
+    .padding(0.5)
 
   // Create a scale for the y-axis (temperatureMax)
   const yScale = d3.scaleLinear()
-    .domain(d3.extent(dataSet.map(function(g) {return g.temperatureMax;})))
-    .range([boundedHeight, 0]);
+    .domain([-5, d3.max(dataSet, function(g) {return g.temperatureMax;})])
+    .range([boundedHeight, 0])
+    .nice();
 
   // compute statistics
   let dataBySeason = Array.from(d3.group(dataSet, function (d) {
     return d.season;
   })); // 0:Spring 1:Summer 2:Fall 3:Winter-- data in [1]
-    // Table view in console
-    console.table(dataBySeason[0][1][2]);
 
-  const springStats = generateStats(dataBySeason[0][1])
-  const summerStats = generateStats(dataBySeason[1][1])
-  const fallStats = generateStats(dataBySeason[2][1])
-  const winterStats = generateStats(dataBySeason[3][1])
+  const box = {
+    width: xScale.bandwidth(),
+    center: xScale.bandwidth() / 2
+  }
 
-  console.log(summerStats.q1)
-  // Draw the box plots for winter data
-  let boxWidth = (Math.ceil( (xScale.bandwidth() + 1) / 10 ) * 10) - 30
+  const boxSpring = viz.append('g')
+    .attr('id', 'springBox')
+    generateBoxPlot(boxSpring, dataBySeason[0][1], box, 'spring')
 
-  const boxSpring = viz.selectAll('.spring')
-    .data([dataBySeason[0][1]])
-    .enter()
-    .append('rect')
-      .attr('class', 'box')
-      .attr('x', xScale('spring'))
-      .attr('y', parseFloat(yScale(springStats.q1).toFixed(1))) // Lower quartile
-      .attr('width', boxWidth)
-      .attr('height', boundedHeight - yScale(springStats.interQuantileRange)) // Interquartile range
-      .attr('fill', 'steelblue')
+  const boxSummer = viz.append('g')
+    .attr('id', 'summerBox')
+    generateBoxPlot(boxSummer, dataBySeason[1][1], box, 'summer')
 
-    const boxSummer = viz.selectAll('.summer')
-    .data([dataBySeason[1][1]])
-    .enter()
-    .append('rect')
-      .attr('class', 'box')
-      .attr('x', xScale('summer'))
-      .attr('y', parseFloat(yScale(summerStats.q1).toFixed(1))) // Lower quartile
-      .attr('width', boxWidth)
-      .attr('height', boundedHeight - yScale(summerStats.interQuantileRange)) // Interquartile range
-      .attr('fill', 'steelblue')
+  const boxFall = viz.append('g')
+    .attr('id', 'fallBox')
+    generateBoxPlot(boxFall, dataBySeason[2][1], box, 'fall') 
 
-    const boxFall = viz.selectAll('.fall')
-    .data([dataBySeason[2][1]])
-    .enter()
-    .append('rect')
-      .attr('class', 'box')
-      .attr('x', xScale('fall'))
-      .attr('y', parseFloat(yScale(fallStats.q1).toFixed(1))) // Lower quartile
-      .attr('width', boxWidth)
-      .attr('height', boundedHeight - yScale(fallStats.interQuantileRange)) // Interquartile range
-      .attr('fill', 'steelblue')
-
-    const boxWinter = viz.selectAll('.winter')
-    .data([dataBySeason[3][1]])
-    .enter()
-    .append('rect')
-      .attr('class', 'box')
-      .attr('x', xScale('winter'))
-      .attr('y', yScale(winterStats.q1)) // Lower quartile
-      .attr('width', boxWidth)
-      .attr('height', boundedHeight - yScale(winterStats.interQuantileRange)) // Interquartile range
-      .attr('fill', 'steelblue')
-
+  const boxWinter = viz.append('g')
+    .attr('id', 'winterBox')
+    generateBoxPlot(boxWinter, dataBySeason[3][1], box, 'winter')
 
 const yAxis = d3.axisLeft(yScale) // Call the axis generator
-.tickValues([-5, 5, 15, 25, 35])
+.tickValues([-5, 0, 5, 10, 15, 20, 25, 30, 35])
 .tickSize(5)
 // Actually create the Y axis
 viz.append('g')
 .attr('class', `x-axis, axes`)
 .call(yAxis)
 
+
+function generateBoxPlot(constant, arrayData, box, string) {
+  const stats = generateStats(arrayData);
+
+  constant.append('line')
+      .attr('class', 'minmax')
+      .attr('x1', xScale(string) + box.center)
+      .attr('x2', xScale(string) + box.center)
+      .attr('y1', yScale(stats.min))
+      .attr('y2', yScale(stats.max))
+
+  constant.selectAll('.' + string)
+      .data(arrayData)
+      .enter()
+      .append('rect')
+          .attr('class', 'box')
+          .attr('x', xScale(string))
+          .attr('y', yScale(stats.q3)) // Lower quartile
+          .attr('width', box.width)
+          .attr('height', Math.abs(yScale(0) - yScale(stats.interQuantileRange))) // Interquartile range
+          .attr('fill', 'steelblue')
+
+  constant.append('line')
+      .attr('class', 'median')
+      .attr('x1', xScale(string))
+      .attr('x2', xScale(string) + box.width)
+      .attr('y1', yScale(stats.median))
+      .attr('y2', yScale(stats.median))
+
+  constant.append('line')
+      .attr('class', 'minmax')
+      .attr('x1', xScale(string) + (box.width * 0.2))
+      .attr('x2', xScale(string) + (box.width * 0.8))
+      .attr('y1', yScale(stats.min))
+      .attr('y2', yScale(stats.min))
+
+  constant.append('line')
+      .attr('class', 'minmax')
+      .attr('x1', xScale(string) + (box.width * 0.2))
+      .attr('x2', xScale(string) + (box.width * 0.8))
+      .attr('y1', yScale(stats.max))
+      .attr('y2', yScale(stats.max))
+}
 
 } // end function
 
