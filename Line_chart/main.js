@@ -1,8 +1,8 @@
 import * as d3 from 'd3';
 import './style.css';
 
-
 /* ===== Preparation ===== */
+const hidD = document.getElementById('hiddenDate')
 
 async function drawChart() {
   const width = 700;
@@ -31,6 +31,7 @@ async function drawChart() {
   };
   const boundedWith = width - margin.left - margin.right;
   const boundedHeight = height - margin.top - margin.bottom;
+  let checkbox = document.querySelector("input[name=checkbox]");
 
   /* ===== DRAW CANVAS ===== */
   const svg = d3.select('#viz')
@@ -46,6 +47,7 @@ async function drawChart() {
   // define accessor functions
   const yAccessor = d => d.temperatureMax;
   const xAccessore = d => d.season;
+  let userDate = hidD.innerHTML;
 
   /* ===== CREATE SCALE ===== */
   // create the vivaldi scale
@@ -69,6 +71,42 @@ async function drawChart() {
     width: xScale.bandwidth(),
     center: xScale.bandwidth() / 2
   }
+
+  checkbox.addEventListener('change', function() {
+    if (!this.checked) {
+      viz.select("#temp").remove();
+    }
+  });
+
+
+  viz.append('g')
+    .attr('id', 'temp')
+    // get observable on date
+    let observer = new MutationObserver(function(mutationsList, observer) {
+      userDate = hidD.innerHTML;
+      let selectedDay;
+      dataSet.forEach(element => {
+        if (element.date == userDate) {
+          selectedDay = element
+        }
+      });
+      if (checkbox.checked) {
+        if (selectedDay != undefined) {
+          viz.select("#temp").remove();
+          // append a line to viz
+          viz.append('g')
+          .attr('id', 'temp')
+          .append('line')
+            .attr('class', 'daycompare')
+            .attr('x1', 0)
+            .attr('x2', boundedWith)
+            .attr('y1', yScale(selectedDay.temperatureMax))
+            .attr('y2', yScale(selectedDay.temperatureMax))
+        }
+      }
+    });
+
+    observer.observe(hidD, { subtree: true, childList: true });
 
   const boxSpring = viz.append('g')
     .attr('id', 'springBox')

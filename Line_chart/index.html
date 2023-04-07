@@ -1,26 +1,59 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Box Plot</title>
-    <link rel="stylesheet" href="./calendar/calendar.css">
-  </head>
-  <body>
-    <div class="tooltip"></div>
-    <div id="app">
 
-      <h2>Scatter plot</h2>
-      <p>A visualization about rain</p>
-      <div id="calendar">
-        <div id="month"></div>
-      </div>
-    
-      <div id="viz"></div>
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Box Plot</title>
+  <link rel="stylesheet" href="./calendar/calendar.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
 
+<body>
+  <div class="tooltip"></div>
+  <div id="app">
+
+    <h2>Scatter plot</h2>
+    <p>A visualization about rain</p>
+    <div id="calendar">
+        <div id="dayCont" class="cont">
+          <div>Day:</div>
+          <div class="vertical">
+            <i id='dayup' class="fa fa-caret-up fa-2x" aria-hidden="true"></i>
+            <div class="cal" id="day"> </div>
+            <i id='daydown' class="fa fa-caret-down fa-2x" aria-hidden="true"></i>
+        </div>
+        </div>
+        <div id="monthCont" class="cont">
+          <div>Month:</div>
+          <div class="vertical">
+            <i id='monthup' class="fa fa-caret-up fa-2x" aria-hidden="true"></i>
+            <div class="cal" id="month"> </div>
+            <i id='monthdown' class="fa fa-caret-down fa-2x" aria-hidden="true"></i>
+          </div>
+        </div>
+        <div id="yearCont" class="cont">
+          <div>Year:</div>
+          <div class="vertical">
+            <i id='yearup' class="fa fa-caret-up fa-2x" aria-hidden="true"></i>
+            <div class="cal" id="year"> </div>
+            <i id='yeardown' class="fa fa-caret-down fa-2x" aria-hidden="true"></i>
+          </div>
+        </div>
     </div>
-    <script src="./calendar/calendar.js"></script>
-    <script type="module" src="/main.js"></script>
-  </body>
+    <div class="form-control">
+      <input id="checkB" type="checkbox" name="checkbox" />
+      <label for="checkbox">Display in viz</label>
+    </div>
+
+
+    <div id="viz"></div>
+
+  </div>
+  <div id="hiddenDate"></div>
+  <script src="./calendar/calendar.js"></script>
+  <script type="module" src="/main.js"></script>
+</body>
+
 </html>

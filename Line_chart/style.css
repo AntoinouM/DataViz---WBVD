@@ -1,6 +1,9 @@
 body {
   background-color: #1a1d2b;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  overflow: hidden;
+  height: 100vh;
+  width: 100%;
 }
 
 #app {
@@ -47,9 +50,51 @@ body {
   fill: pink;
 }
 
+.daycompare {
+  stroke: orange;
+  stroke-width: 2px;
+  stroke-dasharray: 4;
+  fill: orange;
+}
+
 .minmax {
   stroke: pink;
   stroke-width: 1px;
   fill: pink;
+}
+
+#calendar {
+  margin-bottom: 10px;
+}
+
+input[type="checkbox"] {
+  appearance: none;
+  background-color: #25293c;
+  margin: 0;
+  font: inherit;
+  color: #93eef8;
+  width: 1.25em;
+  height: 1.25em;
+  border: 0.15em solid #93eef8;
+  border-radius: 0.15em;
+  display: grid;
+  place-content: center;
+}
+
+input[type="checkbox"]::before {
+  content: "";
+  width: 0.65em;
+  height: 0.65em;
+  transform: scale(0);
+  transition: 120ms transform ease-in-out;
+  box-shadow: inset 1em 1em #93eef8;
+}
+input[type="checkbox"]:checked::before {
+  transform: scale(1);
+}
+
+.form-control {
+  display: flex;
+  gap: 5px;
 }
 
