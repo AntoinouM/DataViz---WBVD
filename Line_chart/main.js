@@ -85,63 +85,66 @@ async function drawChart() {
     .attr('id', 'winterBox')
     generateBoxPlot(boxWinter, dataBySeason[3][1], box, 'winter')
 
+const xAxis = d3.axisTop(xScale)
+  .tickSize(0)
+  svg.append('g')
+    .attr('transform', 'translate(' + margin.left + ',' + (height + 1) + ')')
+    .attr('class', 'x-axis axes')
+    .call(xAxis)
+d3.selectAll(".tick text") // selects the text within all groups of ticks
+        .attr("y", "-20");
 const yAxis = d3.axisLeft(yScale) // Call the axis generator
-.tickValues([-5, 0, 5, 10, 15, 20, 25, 30, 35])
-.tickSize(5)
+  .tickValues([-5, 0, 5, 10, 15, 20, 25, 30, 35])
+  .tickSize(5)
 // Actually create the Y axis
 viz.append('g')
 .attr('class', `x-axis, axes`)
 .call(yAxis)
 
 
-function generateBoxPlot(constant, arrayData, box, string) {
-  const stats = generateStats(arrayData);
+  function generateBoxPlot(constant, arrayData, box, string) {
+    const stats = generateStats(arrayData);
 
-  constant.append('line')
-      .attr('class', 'minmax')
-      .attr('x1', xScale(string) + box.center)
-      .attr('x2', xScale(string) + box.center)
-      .attr('y1', yScale(stats.min))
-      .attr('y2', yScale(stats.max))
+    constant.append('line')
+        .attr('class', 'minmax')
+        .attr('x1', xScale(string) + box.center)
+        .attr('x2', xScale(string) + box.center)
+        .attr('y1', yScale(stats.min))
+        .attr('y2', yScale(stats.max))
 
-  constant.selectAll('.' + string)
-      .data(arrayData)
-      .enter()
-      .append('rect')
-          .attr('class', 'box')
-          .attr('x', xScale(string))
-          .attr('y', yScale(stats.q3)) // Lower quartile
-          .attr('width', box.width)
-          .attr('height', Math.abs(yScale(0) - yScale(stats.interQuantileRange))) // Interquartile range
-          .attr('fill', 'steelblue')
+    constant.selectAll('.' + string)
+        .data(arrayData)
+        .enter()
+        .append('rect')
+            .attr('class', 'box')
+            .attr('x', xScale(string))
+            .attr('y', yScale(stats.q3)) // Lower quartile
+            .attr('width', box.width)
+            .attr('height', Math.abs(yScale(0) - yScale(stats.interQuantileRange))) // Interquartile range
+            .attr('fill', 'steelblue')
 
-  constant.append('line')
-      .attr('class', 'median')
-      .attr('x1', xScale(string))
-      .attr('x2', xScale(string) + box.width)
-      .attr('y1', yScale(stats.median))
-      .attr('y2', yScale(stats.median))
+    constant.append('line')
+        .attr('class', 'median')
+        .attr('x1', xScale(string))
+        .attr('x2', xScale(string) + box.width)
+        .attr('y1', yScale(stats.median))
+        .attr('y2', yScale(stats.median))
 
-  constant.append('line')
-      .attr('class', 'minmax')
-      .attr('x1', xScale(string) + (box.width * 0.2))
-      .attr('x2', xScale(string) + (box.width * 0.8))
-      .attr('y1', yScale(stats.min))
-      .attr('y2', yScale(stats.min))
+    constant.append('line')
+        .attr('class', 'minmax')
+        .attr('x1', xScale(string) + (box.width * 0.2))
+        .attr('x2', xScale(string) + (box.width * 0.8))
+        .attr('y1', yScale(stats.min))
+        .attr('y2', yScale(stats.min))
 
-  constant.append('line')
-      .attr('class', 'minmax')
-      .attr('x1', xScale(string) + (box.width * 0.2))
-      .attr('x2', xScale(string) + (box.width * 0.8))
-      .attr('y1', yScale(stats.max))
-      .attr('y2', yScale(stats.max))
-}
-
+    constant.append('line')
+        .attr('class', 'minmax')
+        .attr('x1', xScale(string) + (box.width * 0.2))
+        .attr('x2', xScale(string) + (box.width * 0.8))
+        .attr('y1', yScale(stats.max))
+        .attr('y2', yScale(stats.max))
+  }
 } // end function
-
-
-
-
 
 
 drawChart();
