@@ -93,6 +93,7 @@ const xAxis = d3.axisTop(xScale)
     .call(xAxis)
 d3.selectAll(".tick text") // selects the text within all groups of ticks
         .attr("y", "-20");
+
 const yAxis = d3.axisLeft(yScale) // Call the axis generator
   .tickValues([-5, 0, 5, 10, 15, 20, 25, 30, 35])
   .tickSize(5)

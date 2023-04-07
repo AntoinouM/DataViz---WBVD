@@ -36,6 +36,11 @@ body {
   stroke-width: 1px;
 }
 
+.active {
+  fill: pink;
+  stroke: steelblue;
+}
+
 .median {
   stroke: pink;
   stroke-width: 2px;
