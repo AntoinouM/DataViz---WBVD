@@ -1,6 +1,7 @@
 import * as d3 from 'd3';
 import './style.css';
 
+
 /* ===== Preparation ===== */
 
 async function drawChart() {

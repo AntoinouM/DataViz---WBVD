@@ -1,0 +1,13 @@
+#calendar {
+    display: flex;
+}
+
+#month {
+    width: 120px;
+    height: 40px;
+    border: 2px solid #93eef8;
+    background-color: #25293c;
+    color: #93eef8;
+    font-family: non-serif;
+    text-align: center;
+}
