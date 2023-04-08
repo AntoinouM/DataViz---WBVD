@@ -16,11 +16,6 @@ async function drawChart() {
     d.season = getSeason(month);
     return d;
   });
-  // add a temperature in celcius
-  dataSet = dataSet.map(function (d) {
-    d.temperatureMax = parseFloat(((d.temperatureMax - 32) * 5 / 9).toFixed(1));
-    return d;
-  });
 
   /* ===== CHART DIMENSION ===== */
   const margin = {
@@ -45,7 +40,7 @@ async function drawChart() {
 
 
   // define accessor functions
-  const yAccessor = d => d.temperatureMax;
+  const yAccessor = d => d.humidity;
   const xAccessore = d => d.season;
   let userDate = hidD.innerHTML;
 
@@ -58,7 +53,7 @@ async function drawChart() {
 
   // Create a scale for the y-axis (temperatureMax)
   const yScale = d3.scaleLinear()
-    .domain([-5, d3.max(dataSet, function(g) {return g.temperatureMax;})])
+    .domain([0, d3.max(dataSet, function(g) {return g.humidity;})])
     .range([boundedHeight, 0])
     .nice();
 
@@ -83,6 +78,7 @@ async function drawChart() {
       dataSet.forEach(element => {
         if (element.date == userDate) {
           selectedDay = element
+          console.log(element)
         }
       });
       if (checkbox.checked) {
@@ -96,16 +92,16 @@ async function drawChart() {
             .attr('class', 'daycompare')
             .attr('x1', 0)
             .attr('x2', width)
-            .attr('y1', yScale(selectedDay.temperatureMax))
-            .attr('y2', yScale(selectedDay.temperatureMax))
+            .attr('y1', yScale(selectedDay.humidity))
+            .attr('y2', yScale(selectedDay.humidity))
             viz.append('g')
             .attr('id', 'temptext')
             .append("text")
             .attr("x", boundedWith - 35)
-            .attr("y", yScale(selectedDay.temperatureMax) - 10)
+            .attr("y", yScale(selectedDay.humidity) - 10)
             .style("font-size", "16px")
             .attr('fill', 'orange')
-            .text(`${selectedDay.temperatureMax}°C`);
+            .text(`${selectedDay.humidity}%`);
 
         }
       }
@@ -127,16 +123,16 @@ async function drawChart() {
             .attr('class', 'daycompare')
             .attr('x1', 0)
             .attr('x2', boundedWith)
-            .attr('y1', yScale(selectedDay.temperatureMax))
-            .attr('y2', yScale(selectedDay.temperatureMax))
+            .attr('y1', yScale(selectedDay.humidity))
+            .attr('y2', yScale(selectedDay.humidity))
             viz.append('g')
             .attr('id', 'temptext')
             .append("text")
             .attr("x", boundedWith - 35)
-            .attr("y", yScale(selectedDay.temperatureMax) - 10)
+            .attr("y", yScale(selectedDay.humidity) - 10)
             .style("font-size", "16px")
             .attr('fill', 'orange')
-            .text(`${selectedDay.temperatureMax}°C`);
+            .text(`${selectedDay.humidity}%`);
         }
       }
     });
@@ -167,7 +163,7 @@ d3.selectAll(".tick text") // selects the text within all groups of ticks
         .attr("y", "-20");
 
 const yAxis = d3.axisLeft(yScale) // Call the axis generator
-  .tickValues([-5, 0, 5, 10, 15, 20, 25, 30, 35])
+  .tickValues([0, 0.2, 0.4, 0.6, 0.8, 1])
   .tickSize(5)
 // Actually create the Y axis
 viz.append('g')
@@ -249,12 +245,12 @@ function getSeason(month) {
 }
 
 function generateStats(array) {
-  let q1 = d3.quantile(array.map(function (g) {return g.temperatureMax;}).sort(d3.ascending), .25)
-  let median = d3.quantile(array.map(function (g) {return g.temperatureMax;}).sort(d3.ascending), .5)
-  let q3 = d3.quantile(array.map(function (g) {return g.temperatureMax;}).sort(d3.ascending), .75)
+  let q1 = d3.quantile(array.map(function (g) {return g.humidity;}).sort(d3.ascending), .25)
+  let median = d3.quantile(array.map(function (g) {return g.humidity;}).sort(d3.ascending), .5)
+  let q3 = d3.quantile(array.map(function (g) {return g.humidity;}).sort(d3.ascending), .75)
   let interQuantileRange = q3 - q1
-  let min = d3.min(array.map(function (g) {return g.temperatureMax;}))
-  let max = d3.max(array.map(function (g) {return g.temperatureMax;}))
+  let min = d3.min(array.map(function (g) {return g.humidity;}))
+  let max = d3.max(array.map(function (g) {return g.humidity;}))
 
   return ({
     q1: q1,
