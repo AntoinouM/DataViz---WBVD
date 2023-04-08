@@ -66,31 +66,58 @@ async function drawChart() {
   let dataBySeason = Array.from(d3.group(dataSet, function (d) {
     return d.season;
   })); // 0:Spring 1:Summer 2:Fall 3:Winter-- data in [1]
+  let selectedDay;
 
   const box = {
     width: xScale.bandwidth(),
     center: xScale.bandwidth() / 2
   }
 
-  checkbox.addEventListener('change', function() {
-    if (!this.checked) {
-      viz.select("#temp").remove();
-    }
-  });
-
-
   viz.append('g')
     .attr('id', 'temp')
+  viz.append('g')
+    .attr('id', 'temptext')
     // get observable on date
     let observer = new MutationObserver(function(mutationsList, observer) {
       userDate = hidD.innerHTML;
-      let selectedDay;
       dataSet.forEach(element => {
         if (element.date == userDate) {
           selectedDay = element
         }
       });
       if (checkbox.checked) {
+        if (selectedDay != undefined) {
+          viz.select("#temp").remove();
+          viz.selectAll("#temptext").remove();
+          // append a line to viz
+          viz.append('g')
+          .attr('id', 'temp')
+          .append('line')
+            .attr('class', 'daycompare')
+            .attr('x1', 0)
+            .attr('x2', width)
+            .attr('y1', yScale(selectedDay.temperatureMax))
+            .attr('y2', yScale(selectedDay.temperatureMax))
+            viz.append('g')
+            .attr('id', 'temptext')
+            .append("text")
+            .attr("x", boundedWith - 35)
+            .attr("y", yScale(selectedDay.temperatureMax) - 10)
+            .style("font-size", "16px")
+            .attr('fill', 'orange')
+            .text(`${selectedDay.temperatureMax}°C`);
+
+        }
+      }
+    });
+
+    observer.observe(hidD, { subtree: true, childList: true });
+
+    checkbox.addEventListener('change', function() {
+      if (!this.checked) {
+        viz.select("#temp").remove();
+        viz.select("#temptext").remove();
+      } else {
         if (selectedDay != undefined) {
           viz.select("#temp").remove();
           // append a line to viz
@@ -102,11 +129,17 @@ async function drawChart() {
             .attr('x2', boundedWith)
             .attr('y1', yScale(selectedDay.temperatureMax))
             .attr('y2', yScale(selectedDay.temperatureMax))
+            viz.append('g')
+            .attr('id', 'temptext')
+            .append("text")
+            .attr("x", boundedWith - 35)
+            .attr("y", yScale(selectedDay.temperatureMax) - 10)
+            .style("font-size", "16px")
+            .attr('fill', 'orange')
+            .text(`${selectedDay.temperatureMax}°C`);
         }
       }
     });
-
-    observer.observe(hidD, { subtree: true, childList: true });
 
   const boxSpring = viz.append('g')
     .attr('id', 'springBox')

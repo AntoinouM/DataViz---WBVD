@@ -98,3 +98,7 @@ input[type="checkbox"]:checked::before {
   gap: 5px;
 }
 
+.form-control > label {
+  color: #93eef8;
+}
+
