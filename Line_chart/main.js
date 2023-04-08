@@ -2,7 +2,15 @@ import * as d3 from 'd3';
 import './style.css';
 
 /* ===== Preparation ===== */
-const hidD = document.getElementById('hiddenDate')
+const hidD = document.getElementById('hiddenDate');
+const infoTemp = document.getElementById('info');
+const vizDiv = document.getElementById('viz');
+const seasonDiv = document.getElementById('season');
+const summary = document.getElementById('summary');
+const temperature = document.getElementById('temperature');
+
+infoTemp.style.left = vizDiv.getBoundingClientRect().right + 380 + "px";
+infoTemp.style.top = vizDiv.getBoundingClientRect().top + 20 + "px";
 
 async function drawChart() {
   const width = 700;
@@ -73,7 +81,6 @@ async function drawChart() {
   // get observable on date
   let observer = new MutationObserver(function (mutationsList, observer) {
     userDate = hidD.innerHTML;
-    console.log(userDate)
     dataSet.forEach(element => {
       if (element.date == userDate) {
         selectedDay = element
@@ -85,7 +92,9 @@ async function drawChart() {
         viz.selectAll("#temptext").remove();
         // append a line to viz
         generateTempLine(viz, selectedDay)
-      }
+
+      } 
+      generateInfoBox(selectedDay, userDate)
     }
   });
 
@@ -99,11 +108,14 @@ async function drawChart() {
     if (!this.checked) {
       viz.select("#temp").remove();
       viz.select("#temptext").remove();
+      infoTemp.style.visibility = "hidden";
     } else {
+      infoTemp.style.visibility = "visible";
       if (selectedDay != undefined) {
         viz.select("#temp").remove();
         // append a line to viz
         generateTempLine(viz, selectedDay)
+        generateInfoBox(selectedDay, userDate)
       }
     }
   });
@@ -262,4 +274,13 @@ function generateStats(array) {
     min: min,
     max: max
   })
+}
+
+function generateInfoBox(array, date) {
+  console.log(array)
+  if (array.season != undefined || userDate < array.date) {
+    seasonDiv.innerHTML = array.season
+    summary.innerHTML = array.summary
+    temperature .innerHTML = ( `${((array.temperatureMax - 32) * (5/9)).toFixed(1)}°C` )
+  }
 }

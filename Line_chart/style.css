@@ -67,6 +67,27 @@ body {
   margin-bottom: 10px;
 }
 
+#info {
+  visibility: hidden;
+  position: absolute;
+  padding: 10px 5px 10px 5px;
+  border: 1px solid #93eef8;
+  border-radius: 5px;
+  background-color: #25293c;
+  width: 200px;
+  height: 300px;
+  display: flex;
+  color: #93eef8;
+  flex-direction: column;
+  overflow-wrap: break-word;
+}
+
+#h2 {
+  font-weight: bold;
+  margin-bottom: 10px;
+  height: 30px;
+}
+
 input[type="checkbox"] {
   appearance: none;
   background-color: #25293c;
