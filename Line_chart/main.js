@@ -7,7 +7,6 @@ const hidD = document.getElementById('hiddenDate')
 async function drawChart() {
   const width = 700;
   const height = 500;
-  const color = '#FFCAE9';
   /* ===== Load Data ===== */
   let dataSet = await d3.json('./data/weather_data_2021.json')
   // add a corresponding season to all my entries
@@ -38,10 +37,6 @@ async function drawChart() {
     .attr('class', 'box-plot')
     .attr('transform', `translate(${margin.left}, ${margin.top})`)
 
-
-  // define accessor functions
-  const yAccessor = d => d.humidity;
-  const xAccessore = d => d.season;
   let userDate = hidD.innerHTML;
 
   /* ===== CREATE SCALE ===== */
@@ -53,7 +48,9 @@ async function drawChart() {
 
   // Create a scale for the y-axis (temperatureMax)
   const yScale = d3.scaleLinear()
-    .domain([0, d3.max(dataSet, function(g) {return g.humidity;})])
+    .domain([0, d3.max(dataSet, function (g) {
+      return g.humidity;
+    })])
     .range([boundedHeight, 0])
     .nice();
 
@@ -72,146 +69,141 @@ async function drawChart() {
     .attr('id', 'temp')
   viz.append('g')
     .attr('id', 'temptext')
-    // get observable on date
-    let observer = new MutationObserver(function(mutationsList, observer) {
-      userDate = hidD.innerHTML;
-      dataSet.forEach(element => {
-        if (element.date == userDate) {
-          selectedDay = element
-          console.log(element)
-        }
-      });
-      if (checkbox.checked) {
-        if (selectedDay != undefined) {
-          viz.select("#temp").remove();
-          viz.selectAll("#temptext").remove();
-          // append a line to viz
-          viz.append('g')
-          .attr('id', 'temp')
-          .append('line')
-            .attr('class', 'daycompare')
-            .attr('x1', 0)
-            .attr('x2', width)
-            .attr('y1', yScale(selectedDay.humidity))
-            .attr('y2', yScale(selectedDay.humidity))
-            viz.append('g')
-            .attr('id', 'temptext')
-            .append("text")
-            .attr("x", boundedWith - 35)
-            .attr("y", yScale(selectedDay.humidity) - 10)
-            .style("font-size", "16px")
-            .attr('fill', 'orange')
-            .text(`${selectedDay.humidity}%`);
 
-        }
+  // get observable on date
+  let observer = new MutationObserver(function (mutationsList, observer) {
+    userDate = hidD.innerHTML;
+    console.log(userDate)
+    dataSet.forEach(element => {
+      if (element.date == userDate) {
+        selectedDay = element
       }
     });
-
-    observer.observe(hidD, { subtree: true, childList: true });
-
-    checkbox.addEventListener('change', function() {
-      if (!this.checked) {
+    if (checkbox.checked) {
+      if (selectedDay != undefined) {
         viz.select("#temp").remove();
-        viz.select("#temptext").remove();
-      } else {
-        if (selectedDay != undefined) {
-          viz.select("#temp").remove();
-          // append a line to viz
-          viz.append('g')
-          .attr('id', 'temp')
-          .append('line')
-            .attr('class', 'daycompare')
-            .attr('x1', 0)
-            .attr('x2', boundedWith)
-            .attr('y1', yScale(selectedDay.humidity))
-            .attr('y2', yScale(selectedDay.humidity))
-            viz.append('g')
-            .attr('id', 'temptext')
-            .append("text")
-            .attr("x", boundedWith - 35)
-            .attr("y", yScale(selectedDay.humidity) - 10)
-            .style("font-size", "16px")
-            .attr('fill', 'orange')
-            .text(`${selectedDay.humidity}%`);
-        }
+        viz.selectAll("#temptext").remove();
+        // append a line to viz
+        generateTempLine(viz, selectedDay)
       }
-    });
+    }
+  });
 
+  observer.observe(hidD, {
+    subtree: true,
+    childList: true
+  });
+
+  // add event for checkbox
+  checkbox.addEventListener('change', function () {
+    if (!this.checked) {
+      viz.select("#temp").remove();
+      viz.select("#temptext").remove();
+    } else {
+      if (selectedDay != undefined) {
+        viz.select("#temp").remove();
+        // append a line to viz
+        generateTempLine(viz, selectedDay)
+      }
+    }
+  });
+
+
+  // box plot generation
   const boxSpring = viz.append('g')
     .attr('id', 'springBox')
-    generateBoxPlot(boxSpring, dataBySeason[0][1], box, 'spring')
+  generateBoxPlot(boxSpring, dataBySeason[0][1], box, 'spring')
 
   const boxSummer = viz.append('g')
     .attr('id', 'summerBox')
-    generateBoxPlot(boxSummer, dataBySeason[1][1], box, 'summer')
+  generateBoxPlot(boxSummer, dataBySeason[1][1], box, 'summer')
 
   const boxFall = viz.append('g')
     .attr('id', 'fallBox')
-    generateBoxPlot(boxFall, dataBySeason[2][1], box, 'fall') 
+  generateBoxPlot(boxFall, dataBySeason[2][1], box, 'fall')
 
   const boxWinter = viz.append('g')
     .attr('id', 'winterBox')
-    generateBoxPlot(boxWinter, dataBySeason[3][1], box, 'winter')
+  generateBoxPlot(boxWinter, dataBySeason[3][1], box, 'winter')
 
-const xAxis = d3.axisTop(xScale)
-  .tickSize(0)
+  // show x axe on the bottom with offset to hide line
+  const xAxis = d3.axisTop(xScale)
+    .tickSize(0)
   svg.append('g')
     .attr('transform', 'translate(' + margin.left + ',' + (height + 1) + ')')
     .attr('class', 'x-axis axes')
     .call(xAxis)
-d3.selectAll(".tick text") // selects the text within all groups of ticks
-        .attr("y", "-20");
+  d3.selectAll(".tick text") // selects the text within all groups of ticks
+    .attr("y", "-20");
 
-const yAxis = d3.axisLeft(yScale) // Call the axis generator
-  .tickValues([0, 0.2, 0.4, 0.6, 0.8, 1])
-  .tickSize(5)
-// Actually create the Y axis
-viz.append('g')
-.attr('class', `x-axis, axes`)
-.call(yAxis)
+  const yAxis = d3.axisLeft(yScale) // Call the axis generator
+    .tickValues([0, 0.2, 0.4, 0.6, 0.8, 1])
+    .tickSize(5)
+  // Actually create the Y axis
+  viz.append('g')
+    .attr('class', `x-axis, axes`)
+    .call(yAxis)
 
+  function generateTempLine(DOMel, selectedDay) {
+    DOMel.append('g')
+      .attr('id', 'temp')
+      .append('line')
+      .attr('class', 'daycompare')
+      .attr('x1', 0)
+      .attr('x2', boundedWith)
+      .attr('y1', yScale(selectedDay.humidity))
+      .attr('y2', yScale(selectedDay.humidity))
+    DOMel.append('g')
+      .attr('id', 'temptext')
+      .append("text")
+      .attr("x", boundedWith - 35)
+      .attr("y", yScale(selectedDay.humidity) - 10)
+      .style("font-size", "16px")
+      .attr('fill', 'orange')
+      .text(`${(selectedDay.humidity * 100).toFixed(0)}%`);
+  }
 
   function generateBoxPlot(constant, arrayData, box, string) {
     const stats = generateStats(arrayData);
 
     constant.append('line')
-        .attr('class', 'minmax')
-        .attr('x1', xScale(string) + box.center)
-        .attr('x2', xScale(string) + box.center)
-        .attr('y1', yScale(stats.min))
-        .attr('y2', yScale(stats.max))
+      .attr('class', 'minmax')
+      .attr('x1', xScale(string) + box.center)
+      .attr('x2', xScale(string) + box.center)
+      .attr('y1', yScale(stats.min))
+      .attr('y2', yScale(stats.max))
 
     constant.selectAll('.' + string)
-        .data(arrayData)
-        .enter()
-        .append('rect')
-            .attr('class', 'box')
-            .attr('x', xScale(string))
-            .attr('y', yScale(stats.q3)) // Lower quartile
-            .attr('width', box.width)
-            .attr('height', Math.abs(yScale(0) - yScale(stats.interQuantileRange))) // Interquartile range
-            .attr('fill', 'steelblue')
+      .data(arrayData)
+      .enter()
+      .append('rect')
+      .attr('class', 'box')
+      .attr('x', xScale(string))
+      .attr('y', yScale(stats.q3)) // Lower quartile
+      .attr('width', box.width)
+      .attr('height', Math.abs(yScale(0) - yScale(stats.interQuantileRange))) // Interquartile range
+      .attr('fill', 'steelblue')
 
     constant.append('line')
-        .attr('class', 'median')
-        .attr('x1', xScale(string))
-        .attr('x2', xScale(string) + box.width)
-        .attr('y1', yScale(stats.median))
-        .attr('y2', yScale(stats.median))
+      .attr('class', 'median')
+      .attr('x1', xScale(string))
+      .attr('x2', xScale(string) + box.width)
+      .attr('y1', yScale(stats.median))
+      .attr('y2', yScale(stats.median))
 
     constant.append('line')
-        .attr('class', 'minmax')
-        .attr('x1', xScale(string) + (box.width * 0.2))
-        .attr('x2', xScale(string) + (box.width * 0.8))
-        .attr('y1', yScale(stats.min))
-        .attr('y2', yScale(stats.min))
+      .attr('class', 'minmax')
+      .attr('x1', xScale(string) + (box.width * 0.2))
+      .attr('x2', xScale(string) + (box.width * 0.8))
+      .attr('y1', yScale(stats.min))
+      .attr('y2', yScale(stats.min))
 
     constant.append('line')
-        .attr('class', 'minmax')
-        .attr('x1', xScale(string) + (box.width * 0.2))
-        .attr('x2', xScale(string) + (box.width * 0.8))
-        .attr('y1', yScale(stats.max))
-        .attr('y2', yScale(stats.max))
+      .attr('class', 'minmax')
+      .attr('x1', xScale(string) + (box.width * 0.2))
+      .attr('x2', xScale(string) + (box.width * 0.8))
+      .attr('y1', yScale(stats.max))
+      .attr('y2', yScale(stats.max))
   }
 } // end function
 
@@ -245,12 +237,22 @@ function getSeason(month) {
 }
 
 function generateStats(array) {
-  let q1 = d3.quantile(array.map(function (g) {return g.humidity;}).sort(d3.ascending), .25)
-  let median = d3.quantile(array.map(function (g) {return g.humidity;}).sort(d3.ascending), .5)
-  let q3 = d3.quantile(array.map(function (g) {return g.humidity;}).sort(d3.ascending), .75)
+  let q1 = d3.quantile(array.map(function (g) {
+    return g.humidity;
+  }).sort(d3.ascending), .25)
+  let median = d3.quantile(array.map(function (g) {
+    return g.humidity;
+  }).sort(d3.ascending), .5)
+  let q3 = d3.quantile(array.map(function (g) {
+    return g.humidity;
+  }).sort(d3.ascending), .75)
   let interQuantileRange = q3 - q1
-  let min = d3.min(array.map(function (g) {return g.humidity;}))
-  let max = d3.max(array.map(function (g) {return g.humidity;}))
+  let min = d3.min(array.map(function (g) {
+    return g.humidity;
+  }))
+  let max = d3.max(array.map(function (g) {
+    return g.humidity;
+  }))
 
   return ({
     q1: q1,

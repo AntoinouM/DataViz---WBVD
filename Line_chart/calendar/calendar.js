@@ -80,11 +80,36 @@ let observerMonth = new MutationObserver(function(mutationsList, observer) {
         indexDay = dayArr[dayArr.length - 2]
         dayDiv.innerHTML = dayArr[indexDay]
     }
-    calendar.date = returnFormatedDate(new Date(yearDiv.innerHTML, monthDiv.innerHTML, dayDiv.innerHTML))
+    if (indexYear == 0) {
+        if (indexMonth >= 11) {
+            indexMonth = 11;
+        }
+    } else {
+        if (indexMonth >= 2) {
+            indexMonth = 2;
+        }
+    }
+    if (indexMonth >= 11) {
+        let day = dayDiv.innerHTML;
+        if (day < 10) {
+            day = '0' + day;
+        }
+        calendar.date = `${yearDiv.innerHTML}-12-${day}`
+    } else {
+        calendar.date = returnFormatedDate(new Date(yearDiv.innerHTML, monthDiv.innerHTML, dayDiv.innerHTML))
+    }
 });
 
 let observerDay = new MutationObserver(function(mutationsList, observer) {
-    calendar.date = returnFormatedDate(new Date(yearDiv.innerHTML, monthDiv.innerHTML, dayDiv.innerHTML))
+    if (indexMonth >= 11) {
+        let day = dayDiv.innerHTML;
+        if (day < 10) {
+            day = '0' + day;
+        }
+        calendar.date = `${yearDiv.innerHTML}-12-${day}`
+    } else {
+        calendar.date = returnFormatedDate(new Date(yearDiv.innerHTML, monthDiv.innerHTML, dayDiv.innerHTML))
+    }
 });
 observerMonth.observe(monthDiv, { subtree: true, childList: true });
 observerYear.observe(yearDiv, { subtree: true, childList: true });
