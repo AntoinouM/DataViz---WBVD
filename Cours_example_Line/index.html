@@ -1,13 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vite App</title>
-  </head>
-  <body>
-    <div id="app"></div>
-    <script type="module" src="/main.js"></script>
-  </body>
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>D3 Line Chart | Weather Data 🌧️</title>
+</head>
+
+<body>
+
+  <div id="app">
+    <h1>DataSet</h1>
+    <p>This visualization shows the weather data of Vienna. More specifically from <strong>11.03.2020</strong> to
+      <strong>10.03.2021</strong>.</p>
+    <p>The dataset contains <strong>365 days</strong>, where each day is represented by a <strong>JSON object</strong>,
+      which contains all information. The data is retrieved from the <a href="https://darksky.net/dev"
+        target="_blank">Dark Sky API</a>. Unfortunately the Dark Sky API is shut down (state 2023) so we can't grab
+      newer data.</p>
+    <hr />
+    <br />
+    <h2>DataVisualization 🌧️</h2>
+    <div id="viz"></div>
+  </div>
+  <script type="module" src="/main.js"></script>
+
+</body>
+
 </html>

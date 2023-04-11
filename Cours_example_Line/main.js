@@ -1,12 +1,6 @@
 import './style.css';
 import * as d3 from 'd3';
 
-const dataExample = d3.csv('./data/dataSet.csv')
-    .then((dataExample) => {
-        console.log(dataExample)
-    }) // return a Promise so all the code that require data should be executed in this scope.
-    // this means it can be complicated to manage seve ral dataset as we would need to chain callback .then( .then( .then()))
-
 /* ======= CHART CHECKILIST ========
 - [1] `Access data` -- Define how we access the values
 - [2] `Create chart dimensions` -- Declare the physical chart parameters
@@ -19,40 +13,55 @@ const dataExample = d3.csv('./data/dataSet.csv')
 
 // easier to work with asynch / await
 async function drawChart() {
-    const width = 700;
-    const height = 500;
-    const circleRadius = 4;
-    const color = '#FFCAE9';
-    // let dataSet;
-    // try {
-    //     dataSet = await d3.csv('./data/dataSet.csv'); // the await keyword make things synchronous, make it ike the natural way of reading it
-    // } catch (e) {
-    //     console.error(e);
-    // }
+    /* Preparation */
+    const dateParse = d3.timeParse('%Y-%m-%d');
 
     /* [1] ===== ACCESS DATA ===== */
     const dataSet = await d3.json('./data/weather_data_2021.json')
-            // Some simple stats
 
+    console.table(dataSet[0]); // view first element as table in console
+
+    // Define accessor functions
+    const yAccessor = d => ((d.temperatureMax - 32) * (5/9));
+    const xAccessor = d => dateParse(d.date); 
 
     /* [2] ===== CHART DIMENSION ===== */
-    const margin = {top: 20, right: 20, bottom: 35, left: 35};
-    const boundedWith = width - margin.left - margin.right;
-    const boundedHeight = height - margin.top - margin.bottom;
+    const dimensions = {
+        width: window.innerWidth * 0.75,
+        height: 500,
+        margin: {top: 20, right: 20, bottom: 35, left: 35},
+        boundedWidth: undefined,
+        boundedHeight: undefined,
+    }
+
+    dimensions.boundedWidth = dimensions.width - dimensions.margin.left - dimensions.margin.right;
+    dimensions.boundedHeight = dimensions.height - dimensions.margin.top - dimensions.margin.bottom;
 
     /* [3] ===== DRAW CANVAS ===== */
+
+
+
+
+    const wrapper = d3.select('#viz')
     const svg = d3.select('#viz')
         .append('svg')
-            .attr('width', width)
-            .attr('height', height)
+            .attr('width', dimensions.width)
+            .attr('height', dimensions.height);
 
-    const viz = svg.append('g')
-        .attr('class', 'line-chart')
-        .attr('transform', `translate(${margin.left}, ${margin.top})`)
+            const viz = svg.append('g')
+            .attr('class', 'line-chart')
+            .attr('transform', `translate(${dimensions.margin.left}, ${dimensions.margin.top})`)
 
     /* [4] ===== CREATE SCALE ===== */
+     const yScale = d3.scaleLinear()
+        .domain([0, d3.max(dataSet, yAccessor)])
+        .range([dimensions.boundedHeight, 0])
+        .nice();
 
-
+    const xScale = d3.scaleTime()
+        .domain(d3.extent(dataSet, xAccessor))
+        .range([0, dimensions.boundedWidth])
+        .nice();
     /* [5] ===== DRAW DATA ===== */
 
 

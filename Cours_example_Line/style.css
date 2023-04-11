@@ -1,5 +1,7 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+
 :root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: 'Poppins', Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
 
@@ -12,4 +14,92 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
+}
+
+#app {
+  text-align: center;
+  color: whitesmoke;
+  padding: 30px 60px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#app > p {
+  width: 90%;
+}
+
+#viz {
+  margin-top: 5vh;
+  background-color: #3b3c3e;
+  border-radius: 10px;
+}
+
+p {
+  margin: 5px;
+}
+
+hr {
+  border: 0;
+  height: 1px;
+  background: grey
+}
+
+a {
+  color: darkcyan;
+}
+
+h1 {
+  margin: 5px 5px 15px 5px;
+}
+
+h2 {
+  margin-bottom: 5px;
+}
+
+#viz {
+  position: relative;
+}
+
+.tooltip {
+  opacity: 0;
+  position: absolute;
+  top: -14px;
+  left: 0;
+  padding: 0.6em 1em;
+  background: #fff;
+  text-align: center;
+  line-height: 1.4em;
+  font-size: 0.9em;
+  border: 1px solid #ddd;
+  z-index: 10;
+  transition: all 0.1s ease-out;
+  pointer-events: none;
+}
+
+.tooltip:before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 12px;
+  height: 12px;
+  background: white;
+  border: 1px solid #ddd;
+  border-top-color: transparent;
+  border-left-color: transparent;
+  transform: translate(-50%, 50%) rotate(45deg);
+  transform-origin: center center;
+  z-index: 10;
+}
+
+.tooltip-date {
+  margin-bottom: 0.2em;
+  font-weight: 600;
+  font-size: 1.1em;
+  line-height: 1.4em;
+}
+
+.listening-rect {
+  fill: transparent;
 }
