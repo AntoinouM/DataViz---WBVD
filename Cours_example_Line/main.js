@@ -70,22 +70,46 @@ async function drawChart() {
     //         .attr('fill', 'steelblue')
 
     // Define line generator
+    const freezingRect = viz.append('rect')
+    .attr('x', 0)
+    .attr('y', yScale(32))
+    .attr('width', dimensions.boundedWidth)
+    .attr('height', dimensions.boundedHeight - yScale(32))
+    .attr('fill', '#e0f3f3')
+
     const lineGenerator = d3.line()
         .x((d) => xScale(xAccessor(d)))
-        .y((d) => yScale(xAccessor(d)));
-        
+        .y((d) => yScale(yAccessor(d)));
+  
     const line = viz.append('path')
         .attr('d', lineGenerator(dataSet))
-        .attr('fill', 'none')
+        .attr('fill', "none")
         .attr('stroke', '#af9357')
-        .attr('stroke-width', 2)
+        .attr ('stroke-width', 2);
 
     /* [6] ===== DRAW PERIPHERALS ===== */
+    const yAxisGenerator = d3.axisLeft(yScale)
+    const yAxis = viz.append('g')
+        .attr('class', 'y-axis')
+        .call(yAxisGenerator)
 
+    const xAxisGenerator = d3.axisBottom(xScale)
+    const xAxis = viz.append('g')
+        .attr('class', 'x-axis')
+        .style('transform' , `translate(0px, ${dimensions.boundedHeight}px)`)
+        .call(xAxisGenerator)
+
+    const title = viz.append('text')
+        .attr('class', 'title')
+        .attr('x', dimensions.boundedWidth/2)
+        .attr('text-anchor', 'middle')
+        .attr('fill', '#cacaca')
+        .text('Average temperature for Vienna (2020-2021)')
 
     // =====================================
     /* [7] ===== SET UP INTERACTION ===== */
     // =====================================
+    
 
 }
 
