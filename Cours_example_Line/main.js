@@ -22,7 +22,7 @@ async function drawChart() {
     console.table(dataSet[0]); // view first element as table in console
 
     // Define accessor functions
-    const yAccessor = d => ((d.temperatureMax - 32) * (5/9));
+    const yAccessor = d => d.temperatureMax;
     const xAccessor = d => dateParse(d.date); 
 
     /* [2] ===== CHART DIMENSION ===== */
@@ -38,10 +38,6 @@ async function drawChart() {
     dimensions.boundedHeight = dimensions.height - dimensions.margin.top - dimensions.margin.bottom;
 
     /* [3] ===== DRAW CANVAS ===== */
-
-
-
-
     const wrapper = d3.select('#viz')
     const svg = d3.select('#viz')
         .append('svg')
@@ -62,8 +58,27 @@ async function drawChart() {
         .domain(d3.extent(dataSet, xAccessor))
         .range([0, dimensions.boundedWidth])
         .nice();
-    /* [5] ===== DRAW DATA ===== */
 
+    /* [5] ===== DRAW DATA ===== */
+    // ⚠️ circles for repetition
+    // const circles = viz.selectAll('circle')
+    //     .data(dataSet)
+    //     .join('circle')
+    //         .attr('r', 2)
+    //         .attr('cx', d => xScale(xAccessor(d)))
+    //         .attr('cy', d => yScale(yAccessor(d)))
+    //         .attr('fill', 'steelblue')
+
+    // Define line generator
+    const lineGenerator = d3.line()
+        .x((d) => xScale(xAccessor(d)))
+        .y((d) => yScale(xAccessor(d)));
+        
+    const line = viz.append('path')
+        .attr('d', lineGenerator(dataSet))
+        .attr('fill', 'none')
+        .attr('stroke', '#af9357')
+        .attr('stroke-width', 2)
 
     /* [6] ===== DRAW PERIPHERALS ===== */
 
