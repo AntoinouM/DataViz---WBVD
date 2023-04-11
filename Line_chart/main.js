@@ -67,6 +67,7 @@ async function drawChart() {
     return d.season;
   })); // 0:Spring 1:Summer 2:Fall 3:Winter-- data in [1]
   let selectedDay;
+  let elementFound = false;
 
   const box = {
     width: xScale.bandwidth(),
@@ -84,6 +85,7 @@ async function drawChart() {
     dataSet.forEach(element => {
       if (element.date == userDate) {
         selectedDay = element
+        elementFound = true;
       }
     });
     if (checkbox.checked) {
@@ -115,7 +117,7 @@ async function drawChart() {
         viz.select("#temp").remove();
         // append a line to viz
         generateTempLine(viz, selectedDay)
-        generateInfoBox(selectedDay, userDate)
+        generateInfoBox(selectedDay, bool)
       }
     }
   });
@@ -276,11 +278,16 @@ function generateStats(array) {
   })
 }
 
-function generateInfoBox(array, date) {
+function generateInfoBox(array, bool) {
   console.log(array)
-  if (array.season != undefined || userDate < array.date) {
+  if (array.season != undefined) {
     seasonDiv.innerHTML = array.season
     summary.innerHTML = array.summary
     temperature .innerHTML = ( `${((array.temperatureMax - 32) * (5/9)).toFixed(1)}°C` )
+  } 
+  else if (!bool) {
+    seasonDiv.innerHTML = "No info on that date."
+    summary.innerHTML = ""
+    temperature .innerHTML = ""
   }
 }

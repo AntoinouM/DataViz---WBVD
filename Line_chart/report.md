@@ -8,3 +8,6 @@ I added some interactivity with a custom calendar element to display a day on th
 I think this solution is a good work around the problem.
 
 > Some element can be improved (the infobox and the line display are no updated after going back to unknown data from the dataset)
+
+my code is available on my github:
+My project is public here [DDataViz](https://github.com/AntoinouM/DataViz---WBVD/tree/master/Line_chart).s
