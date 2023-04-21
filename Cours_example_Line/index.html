@@ -10,6 +10,7 @@
 
 <body>
 
+
   <div id="app">
     <h1>DataSet</h1>
     <p>This visualization shows the weather data of Vienna. More specifically from <strong>11.03.2020</strong> to
@@ -21,7 +22,16 @@
     <hr />
     <br />
     <h2>DataVisualization 🌧️</h2>
-    <div id="viz"></div>
+    <div id="viz">
+      <div id="tooltip" class="tooltip">
+        <div class="tooltip-date">
+          <span id="date">Test</span>
+        </div>
+        <div class="tooltip-temperature">
+          <span id="temperature">Test</span>
+        </div>
+      </div>
+    </div>
   </div>
   <script type="module" src="/main.js"></script>
 

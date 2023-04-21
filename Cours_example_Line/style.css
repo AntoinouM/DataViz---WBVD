@@ -62,16 +62,15 @@ h2 {
 }
 
 .tooltip {
-  opacity: 0;
+  opacity: 1;
   position: absolute;
   top: -14px;
-  left: 0;
   padding: 0.6em 1em;
-  background: #cacaca;
+  background: #242424;
   text-align: center;
   line-height: 1.4em;
   font-size: 0.9em;
-  border: 1px solid #ddd;
+  border: 1px solid #cacaca;
   z-index: 10;
   transition: all 0.1s ease-out;
   pointer-events: none;
@@ -84,8 +83,8 @@ h2 {
   left: 50%;
   width: 12px;
   height: 12px;
-  background: white;
-  border: 1px solid #ddd;
+  background: #242424;
+  border: 1px solid #cacaca;
   border-top-color: transparent;
   border-left-color: transparent;
   transform: translate(-50%, 50%) rotate(45deg);

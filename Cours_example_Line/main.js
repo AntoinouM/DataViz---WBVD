@@ -22,7 +22,7 @@ async function drawChart() {
     console.table(dataSet[0]); // view first element as table in console
 
     // Define accessor functions
-    const yAccessor = d => d.temperatureMax;
+    const yAccessor = d => (d.temperatureMax - 32) * (5/9);
     const xAccessor = d => dateParse(d.date); 
 
     /* [2] ===== CHART DIMENSION ===== */
@@ -50,7 +50,7 @@ async function drawChart() {
 
     /* [4] ===== CREATE SCALE ===== */
      const yScale = d3.scaleLinear()
-        .domain([0, d3.max(dataSet, yAccessor)])
+        .domain(d3.extent(dataSet, yAccessor))
         .range([dimensions.boundedHeight, 0])
         .nice();
 
@@ -72,9 +72,9 @@ async function drawChart() {
     // Define line generator
     const freezingRect = viz.append('rect')
     .attr('x', 0)
-    .attr('y', yScale(32))
+    .attr('y', yScale(0))
     .attr('width', dimensions.boundedWidth)
-    .attr('height', dimensions.boundedHeight - yScale(32))
+    .attr('height', dimensions.boundedHeight - yScale(0))
     .attr('fill', '#e0f3f3')
 
     const lineGenerator = d3.line()
@@ -109,8 +109,75 @@ async function drawChart() {
     // =====================================
     /* [7] ===== SET UP INTERACTION ===== */
     // =====================================
-    
 
+    // listening rectangle
+    const listeningRectangle = viz.append('rect')
+        .attr('class', 'listening-rect')
+        .attr('width', dimensions.boundedWidth)
+        .attr('height', dimensions.boundedHeight)
+        .attr('x', 0)
+        .attr('y', 0)
+        .on('mousemove', onMouseMove)
+        .on('mouseleave', onMouseLeave)
+
+    // reference to tooltip
+    const tooltip = d3.select('#tooltip');
+
+    // add tooltip circle
+    const tooltipCircle = viz.append('circle')
+        .attr('r', 4)
+        .attr('stroke', '#af9357')
+        .attr('fill', '#3b3c3e')
+        .attr('stroke-width', 2)
+        .style('opacity', 0)
+
+    // Listening functions
+
+    function onMouseMove(event, d, i, nodes) { // these parameters are always past when calling by reference
+        const mousePosition = d3.pointer(event, this)
+        const hoveredDate = xScale.invert(mousePosition[0]) // Grab the current date from the x axis // xScale turn data into pixel, invert does the opposite
+        
+        // create a function to find the distance between the hovered point and data point
+        const getDistanceFromHoveredDate = (date) => {
+            return Math.abs(xAccessor(date) - hoveredDate)
+        }
+    /**
+     * The d3.scan() function is a built-in function in D3.js which scans the array linearly and returns the index
+     * of the minimum element according to the specified comparator.
+     * The function returns undefined when there are no comparable elements in the array.
+     *
+     * Return value: The function returns a single integer value denoting the index of the minimum element
+     * in the array based on the specified comparator.
+     */
+        const closestIndex = d3.scan(dataSet, (a, b) => getDistanceFromHoveredDate(a) - getDistanceFromHoveredDate(b));
+
+        // Grab the current day
+        const currDay = dataSet[closestIndex];
+        
+        // Grab the closest x and y coordinates from the point
+        const closestX = xAccessor(currDay);
+        const closestY = yAccessor(currDay);
+
+        // convert current x and y to visual values again
+        const x = xScale(closestX);
+        const y = yScale(closestY);
+
+        // tooltip show
+        tooltip.select('#date').text(closestX.toDateString());
+        tooltip.select('#temperature').text(`${Math.round(closestY * 10) / 10} `);
+
+        tooltip.style('transform', `translate(calc(-30% + ${x}px), calc(-100% + ${y}px))`)
+        tooltip.style('opacity', 1);
+
+        tooltipCircle.attr('cx', x)
+        .attr('cy', y)
+        .style('opacity', 1)
+    }
+
+    function onMouseLeave() {
+        tooltip.style('opacity', 0)
+        tooltipCircle.style('opacity', 0)
+    }
 }
 
 drawChart();
