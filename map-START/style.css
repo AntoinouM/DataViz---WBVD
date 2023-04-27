@@ -16,6 +16,7 @@
 
 .country:hover {
   cursor: pointer;
+  filter: brightness(1.1);
   fill: #efefef;
 }
 
