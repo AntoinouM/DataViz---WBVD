@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🌎 World Map - 🧬 Life Expectancy</title>
+
+  <link rel="stylesheet" href="./style.css">
+</head>
+
+<body>
+  <div class="container">
+    <h2>🌎 World Map - 🧬 Life Expectancy for <span id="currentYear">2000</span></h2>
+    <p>This visualization shows the <strong>Life-Expectancy</strong> data set which contains a list of data from
+      every country around the world – the name, it’s ISO 3 name
+      and the life expectancy over the specified year. This dataset goes from as far back as 1913 (for some
+      countries) to 2019 (for most countries). The default shown year is <strong>2000</strong>. Use the slider below to
+      change the visualization.
+      Zoom in to see more details and click + hold to move around the map.
+    </p>
+
+    <div id="viz"></div>
+
+    <!-- <div class="slider-container">
+      <input id="currentYearSlider" class="slider" type="range" min="1913" max="2019" step="1">
+      <div class="ticks">
+        <span class="tick">1913</span>
+        <span class="tick">1939</span>
+        <span class="tick">1966</span>
+        <span class="tick">1992</span>
+        <span class="tick">2019</span>
+      </div>
+      <button id="btnPlay">▶</button>
+    </div> -->
+  </div>
+
+  <div id="tooltip" class="tooltip">
+    <span id="information"></span>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.15/lodash.min.js"></script>
+
+  <script src="./main.js" type="module"></script>
+</body>
+
+</html>
