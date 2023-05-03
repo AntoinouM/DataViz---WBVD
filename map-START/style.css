@@ -8,7 +8,7 @@
 }
 
 .country {
-  stroke-width: 1;
+  stroke-width: 0.2;
   stroke: darkslategrey;
   fill: white;
   transition: all 0.25s ease-in-out;

@@ -48,7 +48,7 @@ const calendar  = {
     dateInternal: returnFormatedDate(new Date(yearDiv.innerHTML, monthDiv.innerHTML, dayDiv.innerHTML)),
     dateInternal: function(val) {},
     set date(val) {
-      this.aInternal = val;
+      this.dateInternal = val;
       this.aListener(val);
     },
     get date() {
