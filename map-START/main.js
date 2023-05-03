@@ -132,6 +132,35 @@ const drawViz = async () => {
     drawMap(mergedGeoJson, g);
   }
 
+  // ====================
+  // Play button
+  // ====================
+  let play_interval = null;
+
+  const playBtn = d3.select('#btnPlay');
+
+  playBtn.on('click', function() {
+    if (play_interval === null) {
+      this.innerHTML = '⏸️'
+
+      // start the interval
+      play_interval = setInterval(function() {
+        if (currentYear < maxYear) {
+          currentYear += 1;
+        } else {
+          currentYear -= maxYear - minYear
+        }
+
+        slider.node().value = currentYear;
+        currentYearEl.html(currentYear);
+        redraw(currentYear);
+      }, 70);
+    } else {
+      this.innerHTML = '▶';
+      clearInterval(play_interval);
+      play_interval = null;
+    }
+  });
 };
 
 /**
@@ -189,7 +218,3 @@ const createTooltips = (countries) => {
 // Draw the map for the first time
 drawViz();
 
-// ====================
-// Play button
-// ====================
-const playBtn = d3.select('#btnPlay');
