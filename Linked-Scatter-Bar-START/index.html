@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/x-icon" href="./favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Visualize Hiking Trails | ⛰️</title>
+  </head>
+  <body>
+    <h1>Vancouver Hiking Trails <img class="headerImg" src="./assets/hiking.png" alt="Little mountain"/></h1>
+    <p>Visualization of vancouver hiking trails and their diffciulties. Filterable by difficulty.</p>
+    <p>Click on a bar chart to filter the scatterplot on the left.</p>
+
+    <div class="container">
+      <div style="margin-right: 30px;"><svg id="scatterplot"></svg></div>
+      <div><svg id="barchart"></svg></div>
+    </div>
+
+    <div class="source">
+      Source: Data from <a href="https://vancouvertrails.com/trails">vancouvertrails.com</a>
+    </div>
+
+    <div id="tooltip"></div>
+
+    <script type="module" src="./main.js"></script>
+  </body>
+</html>
