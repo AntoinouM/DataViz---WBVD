@@ -25,7 +25,7 @@ class Scatterplot {
         this.initViz(); // Create the chart
     }
 
-    // Initializes the scale, axes, appends static elements (axis, title...)
+    // Initializes the scale, axes, appends static elements (axis, title...) || everything that doesnt change
     initViz() {
         const that = this;
 
@@ -119,21 +119,47 @@ class Scatterplot {
             .join('circle')
                 .attr('class', 'point')
                 .attr('r', 4)
-                .attr('cx', d => that.xScale(that.xAccessor(d)))
-                .attr('cy', d => that.yScale(that.yAccessor(d)))
-                .attr('fill', d => that.config.colorScale(that.colorAccessor(d)));
+                .attr('cx', d => that.xScale(that.xAccessor(d)));
+
+        circles.transition()
+            .duration(600)
+            .ease(d3.easeSinOut)
+            .attr('cy', d => that.yScale(that.yAccessor(d)))
+            .attr('fill', d => that.config.colorScale(that.colorAccessor(d)));
 
         // Create the axes
         that.xAxisG
+            .transition(600)
             .call(that.xAxis)
             .call(g => {
                 g.select('.domain').remove(); // get rid of the axis and use the markers
             })
         that.yAxisG
+            .transition(600)
             .call(that.yAxis)
             .call(g => {
                 g.select('.domain').remove(); // get rid of the axis and use the markers
             })
+
+        // Add tooltips
+        circles.on('mouseover', (event, d) => {
+            d3.select('#tooltip')
+             .style('opacity', 1)
+             .style('left', (event.pageX + that.config.tooltipPadding) + 'px')
+             .style('top', (event.pageY + that.config.tooltipPadding) + 'px')
+             .html(`
+             <div class="tooltip-title">${d.trail}</div>
+             <div><i>${d.region}</i></div>
+             <ul>
+                <li>${d.distance} km, ${d.time} hours</li>
+                <li>${d.difficulty}</li>
+                <li>${d.season}</li>
+             </ul>
+             `)
+        }).on('mouseleave', () => {
+            d3.select('#tooltip')
+            .style('opacity', 0)
+        })
     }
 
 }
